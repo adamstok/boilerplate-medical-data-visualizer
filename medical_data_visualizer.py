@@ -66,7 +66,7 @@ def draw_heat_map():
     # df_heat = None
 
     # Calculate the correlation matrix
-    corr = df.corr()
+    corr = dfh.corr()
 
     # Generate a mask for the upper triangle
     mask = np.triu(np.ones_like(corr, dtype=bool))
