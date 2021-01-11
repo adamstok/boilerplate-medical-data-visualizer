@@ -20,26 +20,31 @@ df['gluc'] = [0 if x == 1 else 1 for x in df['gluc']]
 
 def draw_cat_plot():
     # Create DataFrame for cat plot using `pd.melt` using just the values from 'cholesterol', 'gluc', 'smoke', 'alco', 'active', and 'overweight'.
-    values = ['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight']
+    values = ['cholesterol', 'gluc', 'smoke',
+              'alco', 'active', 'overweight', 'cardio']
     df_val = df[values]
     df_cat = df_val.melt(
-        value_var=values, var_name='variable', value_name='values')
+        id_vars='cardio', value_var=['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight'], var_name='variable', value_name='values')
 
     # Group and reformat the data to split it by 'cardio'. Show the counts of each feature. You will have to rename one of the collumns for the catplot to work correctly.
-    c0 = df[df['cardio'] == 0][values]
-    c1 = df[df['cardio'] == 1][values]
+    graph = sns.catplot(x='variable', col='cardio',
+                        hue='values', data=df_cat, kind='count')
+    fig = graph.fig
 
-    c0_melt = c0.melt(value_vars=values, var_name='variable',
-                      value_name='values')
-    c1_melt = c1.melt(value_vars=values, var_name='variable',
-                      value_name='values')
+    #c0 = df[df['cardio'] == 0][values]
+    #c1 = df[df['cardio'] == 1][values]
 
-    #df_cat = None
+    # c0_melt = c0.melt(value_vars=values, var_name='variable',
+    #                  value_name='values')
+    # c1_melt = c1.melt(value_vars=values, var_name='variable',
+    #                  value_name='values')
+
+    ##df_cat = None
 
     # Draw the catplot with 'sns.catplot()'
-    fig, ax = plt.subplots(1, 2)
-    ax[0] = sns.catplot(x='variable', hue='values', data=c0_melt, kind='count')
-    ax[1] = sns.catplot(x='variable', hue='values', data=c1_melt, kind='count')
+    #fig, ax = plt.subplots(1, 2)
+    #ax[0] = sns.catplot(x='variable', hue='values', data=c0_melt, kind='count')
+    #ax[1] = sns.catplot(x='variable', hue='values', data=c1_melt, kind='count')
 
     # Do not modify the next two lines
     fig.savefig('catplot.png')
