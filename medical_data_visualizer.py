@@ -56,12 +56,12 @@ def draw_cat_plot():
 # Draw Heat Map
 def draw_heat_map():
     # Clean the data
-    global df
-    df = df[df['ap_lo'] <= df['ap_hi']]
-    df = df[df['height'] >= df['height'].quantile(0.025)]
-    df = df[df['height'] <= df['height'].quantile(0.975)]
-    df = df[df['weight'] >= df['weight'].quantile(0.025)]
-    df = df[df['weight'] <= df['weight'].quantile(0.975)]
+
+    dfh = df[(df['ap_lo'] <= df['ap_hi'])
+             & (df['height'] >= df['height'].quantile(0.025))
+             & (df['height'] <= df['height'].quantile(0.975))
+             & (df['weight'] >= df['weight'].quantile(0.025))
+             & (df['weight'] <= df['weight'].quantile(0.975))]
 
     # df_heat = None
 
@@ -75,7 +75,8 @@ def draw_heat_map():
     fig, ax = plt.subplots(figsize=(16, 12))
 
     # Draw the heatmap with 'sns.heatmap()'
-    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.1f', center=0)
+    ax = sns.heatmap(corr, mask=mask, annot=True, fmt='.1f', center=0, linewidths=.5,
+                     vmax=0.25, vmin=-0.1, square=True, cbar_kws={'format': '%.2f', 'shrink': .45})
 
     # Do not modify the next two lines
     fig.savefig('heatmap.png')
