@@ -20,15 +20,17 @@ df['gluc'] = [0 if x == 1 else 1 for x in df['gluc']]
 
 def draw_cat_plot():
     # Create DataFrame for cat plot using `pd.melt` using just the values from 'cholesterol', 'gluc', 'smoke', 'alco', 'active', and 'overweight'.
-    values = ['cholesterol', 'gluc', 'smoke',
-              'alco', 'active', 'overweight', 'cardio']
+    values = ['active', 'alco', 'cholesterol',
+              'gluc', 'overweight', 'smoke', 'cardio']
+
     df_val = df[values]
     df_cat = df_val.melt(
-        id_vars='cardio', value_var=['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight'], var_name='variable', value_name='values')
+        id_vars='cardio', value_vars=['active', 'alco', 'cholesterol', 'gluc', 'overweight', 'smoke'], var_name='variable', value_name='values')
 
     # Group and reformat the data to split it by 'cardio'. Show the counts of each feature. You will have to rename one of the collumns for the catplot to work correctly.
     graph = sns.catplot(x='variable', col='cardio',
                         hue='values', data=df_cat, kind='count')
+    graph.set_axis_labels('variable', 'total')
     fig = graph.fig
 
     #c0 = df[df['cardio'] == 0][values]
@@ -54,6 +56,7 @@ def draw_cat_plot():
 # Draw Heat Map
 def draw_heat_map():
     # Clean the data
+    global df
     df = df[df['ap_lo'] <= df['ap_hi']]
     df = df[df['height'] >= df['height'].quantile(0.025)]
     df = df[df['height'] <= df['height'].quantile(0.975)]
